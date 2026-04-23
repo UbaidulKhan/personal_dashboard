@@ -1,0 +1,2 @@
+"Design a property comparison dashboard that visualizes ROI and ranking 
+data from my PostgreSQL database using the Stitch design framework."
