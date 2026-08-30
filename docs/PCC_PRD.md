@@ -46,6 +46,8 @@ Focused command surface for professional obligations. Tracks Gmail, Outlook, Tea
 
 Cross-pillar planning surface for today, this week, and longer-horizon commitments. Planning should unify tasks, calendar milestones, family commitments, work deadlines, habit targets, and personal projects without replacing the specialized pillar screens.
 
+Planning also supports a single plain-text Google Keep note as an event source. The user can keep writing events in a familiar date-section format, and PCC parses the note into structured events that can be shown in list, day, week, and paper-calendar views.
+
 ### Health
 
 Apple Health-inspired but warmer. Tracks calories, steps, active calories, weight, sleep, workout targets, food logging, and daily/weekly trends.
@@ -53,10 +55,15 @@ Apple Health-inspired but warmer. Tracks calories, steps, active calories, weigh
 Health subareas:
 - Exercise: workout schedule, weekly targets, cardio/strength logs, heart-rate trends, VO2 estimate, and recovery context.
 - Diet: calorie budget, food log, macros, USDA search, breakfast recommendations, hydration prompts, and goal progress.
+- Health must be expandable from the left navigation with a `+` control to reveal Exercise and Diet.
 
 ### Spiritual
 
 Prayer times, adhan, salah tracking, Jumu'ah handling, Quran reading, Arabic learning, hifz flashcards, and spiritual streaks. This pillar should be the most spacious and reverent.
+
+Spiritual subareas:
+- Growth: goals and reflection around prayer consistency, Quran reading, Arabic learning, hifz, character development, and personal spiritual progress.
+- Spiritual must be expandable from the left navigation with a `+` control to reveal Growth.
 
 ### Family
 
@@ -64,11 +71,15 @@ Activity planning for family members and side hustle project management. Include
 
 ### Fun
 
-Personal enjoyment and recovery area containing Hobby and Entertainment.
+Personal enjoyment and recovery area containing Hobby, Music, Entertainment, and YouTube Shorts.
 
 Fun subareas:
 - Hobby: creative, learning, tinkering, reading, side interests, and personal projects done for enjoyment rather than obligation.
+- Music: listening queues, playlists, preferred genres, recitation/nasheed access when used recreationally, and mood-based listening history.
 - Entertainment: queue-oriented YouTube and podcast surface with interest tags, playback position, in-app player controls, and morning queue generation.
+- YouTube Shorts: short-form queue, saved topics, time-boxing controls, and watch-history reflection so short-form content stays intentional.
+- Fun must be expandable from the left navigation with a `+` control.
+- Hobby, Music, Entertainment, and YouTube Shorts must each support their own expandable `+` affordance for future nested views, filters, or saved collections.
 
 ### Morning Routine
 
@@ -104,6 +115,15 @@ Sleep-aware and mood-aware recommendations for audio, caffeine, and breakfast, d
 2. PCC shows the highest-priority inbox items, Teams mentions, open TDx tickets, Keep reminders, and calendar deadlines.
 3. User marks an item reviewed, opens the source system, or promotes it into a Today focus item.
 4. PCC updates the Right Now strip when hard work deadlines become urgent.
+
+### View Keep Events As Calendar
+
+1. User maintains one Google Keep note containing date headings and event lines.
+2. PCC syncs the note and parses each dated section into events.
+3. User opens Planning and selects Calendar.
+4. PCC shows a paper-style week grid starting Sunday and ending Saturday.
+5. Events appear on the correct day with time, title, location, travel marker, and cancellation state where available.
+6. User can switch weeks, open the original Keep note, or inspect the parsed event details.
 
 ### Customize Dashboard
 
@@ -179,6 +199,14 @@ Sleep-aware and mood-aware recommendations for audio, caffeine, and breakfast, d
 
 - Aggregate dated tasks, calendar events, milestones, reminders, work deadlines, family commitments, and habit targets.
 - Support Today, Week, and Backlog views.
+- Support a Calendar view with a Sunday-through-Saturday weekly grid.
+- Parse one configured Google Keep note containing date-heading sections and indented event/location lines.
+- Accept date headings like `August 30, 2026 Sunday -`, `September 3, 2026 // Thursday // Flight to TX`, and similar variants.
+- Preserve the raw note text for auditability and manual correction.
+- Detect event time, title, location/address lines, travel labels, and cancellation markers such as `CANCEL`.
+- Render canceled items visibly but de-emphasized.
+- Show all-day or untimed items at the top of the day cell.
+- Support desktop paper-calendar format with seven columns from Sunday to Saturday.
 - Let users promote planning items into Today focus.
 - Preserve source attribution for items created by other pillars.
 - Surface time-sensitive plan items in the Right Now strip.
@@ -192,10 +220,12 @@ Sleep-aware and mood-aware recommendations for audio, caffeine, and breakfast, d
 ### Fun
 
 - Store hobbies and recreational projects with lightweight progress, next action, and optional streaks.
+- Store music preferences, playlists, listening history, and lightweight mood/energy tags.
 - Fetch YouTube subscription items and podcast RSS episodes.
+- Fetch and organize YouTube Shorts separately from long-form YouTube and podcasts.
 - Build a daily queue with interest tags.
 - Support in-app podcast playback and podcast app handoff.
-- Keep Hobby and Entertainment available as subareas under Fun.
+- Keep Hobby, Music, Entertainment, and YouTube Shorts available as subareas under Fun.
 
 ## 8. UX Requirements
 
@@ -205,6 +235,7 @@ Sleep-aware and mood-aware recommendations for audio, caffeine, and breakfast, d
 - Desktop uses a fixed left sidebar.
 - Tablet uses a collapsible left sidebar.
 - Mobile uses bottom tab navigation.
+- Any left-nav section with subareas must use an expandable/collapsible `+` control and preserve keyboard accessibility.
 - Cards should be softly rounded and information-dense only where the pillar demands it.
 - Markets and Work can be dense; Planning should be structured and scan-friendly; Spiritual must be spacious; Morning should feel warm and motivating; Fun should feel relaxed without becoming noisy.
 - Do not rely on color alone for status.

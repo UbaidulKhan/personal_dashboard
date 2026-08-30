@@ -90,7 +90,10 @@ Required sections:
 
 Required sections:
 - Today plan with focus items, calendar commitments, due reminders, and cross-pillar priorities.
-- Week view for upcoming work, family, health, spiritual, and hobby commitments.
+- Week view for upcoming work, family, health, spiritual, hobby, and travel commitments.
+- Calendar view with a Sunday-through-Saturday grid in desktop paper-calendar style.
+- Google Keep event-note importer/parser for a single configured note.
+- Parsed event review surface that shows the source text, parsed date/time/title/location, and parser confidence.
 - Backlog for personal tasks and ideas not yet scheduled.
 - Source attribution and deep links for items originating in other pillars.
 - Promote-to-Today action for any item.
@@ -109,13 +112,24 @@ Required sections:
 Required subareas:
 - Exercise: workout plan, weekly targets, cardio/strength logs, rings/charts, recovery cues, and workout schedule exposed to Morning Routine.
 - Diet: calorie budget, food search/logging, macro tracking, hydration prompts, and breakfast logging from Morning Routine.
+- Left navigation: Health is expandable/collapsible with a `+` control. Exercise and Diet are hidden until expanded.
 
 ### Fun
 
 Required subareas:
 - Hobby: lightweight tracker for creative interests, learning, reading, tinkering, and recreational projects.
+- Music: playlists, listening preferences, mood/energy tags, and listening history.
 - Entertainment: YouTube and podcast queue, interest tags, playback progress, in-app player, and external app handoff.
-- Fun Today card should summarize both Hobby and Entertainment without making either a separate top-level left-nav item.
+- YouTube Shorts: separate short-form queue, saved topics, time-boxing controls, and watch-history reflection.
+- Fun Today card should summarize Hobby, Music, Entertainment, and YouTube Shorts without making them separate top-level left-nav items.
+- Left navigation: Fun is expandable/collapsible with a `+` control.
+- Hobby, Music, Entertainment, and YouTube Shorts each expose their own expandable `+` affordance so nested filters, saved lists, channels, playlists, or collections can be revealed later.
+
+### Spiritual
+
+Required subareas:
+- Growth: reflection, goals, streaks, and progress insights across prayer consistency, Quran, Arabic, hifz, and character development.
+- Left navigation: Spiritual is expandable/collapsible with a `+` control. Growth is hidden until expanded.
 
 ### Morning Routine Screen
 
@@ -239,6 +253,40 @@ Returns layout config by device class.
 
 Persists card order, size, visibility, and pinned state.
 
+### Planning
+
+`GET /api/planning/events?start=2026-08-30&end=2026-09-05`
+
+Returns parsed planning events from the configured Keep note and other PCC sources.
+
+```json
+{
+  "week_starts_on": "sunday",
+  "source": "google_keep",
+  "events": [
+    {
+      "id": "evt_2026_09_03_flight_tx",
+      "date": "2026-09-03",
+      "start_time": "19:27",
+      "end_time": "22:01",
+      "title": "Flight 4559 to TX",
+      "location": null,
+      "category": "travel",
+      "status": "confirmed",
+      "raw_text": "7:27 PM FLIGHT 4559 / Arrival 10:01 PM"
+    }
+  ]
+}
+```
+
+`POST /api/planning/keep/sync`
+
+Syncs the configured Google Keep note, stores the raw text, parses event sections, and returns parse warnings.
+
+`GET /api/planning/calendar/week?date=2026-09-03`
+
+Returns the Sunday-through-Saturday week containing the requested date, grouped by day for the paper-calendar UI.
+
 ## 8. Database Schema
 
 ### Morning Routine
@@ -299,6 +347,9 @@ CREATE TABLE morning_music_playlists (
 - `prayer_times`, `prayer_log`, `jumuah_log`, and `prayer_settings` feed prayer card and narrative context.
 - Work digest tables should normalize source, external id, title, due time, priority, review state, and source URL across Gmail, Outlook, Teams, TeamDynamix, and Keep.
 - Planning tables should support source attribution, due date, status, priority, pillar, and promoted-to-Today state.
+- `planning_sources`: id, source_type, external_id, title, source_url, active, last_synced_at.
+- `planning_raw_notes`: id, source_id, raw_text, content_hash, captured_at.
+- `planning_events`: id, source_id, raw_note_id, event_date, start_time, end_time, title, location_name, address, category, status, raw_text, parser_confidence, promoted_to_today, created_at, updated_at.
 - Fun tables should separate hobby tracking from the existing entertainment queue.
 - `fun_entertainment_queue` or `entertainment_queue` should replace older `media_queue` naming in new work.
 
@@ -324,8 +375,12 @@ Then apply overrides from `morning_preferences`. Then request Claude narrative u
 - Morning recommendation returns when Claude is unavailable.
 - Work appears in desktop/tablet left navigation and has a Today summary card.
 - Planning and Fun appear in desktop/tablet left navigation and have Today summary cards.
-- Hobby and Entertainment appear as Fun subareas, not separate top-level left-nav peers.
+- Hobby, Music, Entertainment, and YouTube Shorts appear as Fun subareas, not separate top-level left-nav peers.
+- Growth appears as a Spiritual subarea.
 - Exercise and Diet appear as Health subareas.
+- All left-nav sections with subareas can expand/collapse from a visible `+` control and remain keyboard accessible.
+- Google Keep event note parses date-section formats with dashes, slashes, weekday labels, indented event lines, addresses, travel entries, arrivals, and cancellation markers.
+- Planning Calendar view starts on Sunday, ends on Saturday, and visually matches a desktop paper calendar.
 - Work digest items preserve source links and can be reviewed without deleting source data.
 - Mood override updates recommendation and persists.
 - Breakfast log updates food log with calories/macros when confirmed.

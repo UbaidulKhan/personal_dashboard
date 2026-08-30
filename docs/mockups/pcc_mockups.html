@@ -97,9 +97,10 @@
       gap: 4px;
     }
 
-    .nav button {
+    .nav button,
+    .nav summary {
       display: grid;
-      grid-template-columns: 24px 1fr;
+      grid-template-columns: 24px 1fr auto;
       align-items: center;
       gap: 10px;
       min-height: 40px;
@@ -108,6 +109,15 @@
       background: transparent;
       color: var(--text-secondary);
       text-align: left;
+      list-style: none;
+    }
+
+    .nav summary {
+      cursor: pointer;
+    }
+
+    .nav summary::-webkit-details-marker {
+      display: none;
     }
 
     .nav button.active {
@@ -117,9 +127,40 @@
       font-weight: 700;
     }
 
-    .nav button:hover {
+    .nav button:hover,
+    .nav summary:hover {
       background: #fff;
       color: var(--text-primary);
+    }
+
+    .nav details {
+      display: grid;
+      gap: 4px;
+    }
+
+    .nav details summary .toggle {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: #fff;
+      color: var(--text-secondary);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .nav details[open] > summary .toggle {
+      color: var(--text-primary);
+    }
+
+    .nav details[open] > summary .toggle::before {
+      content: "−";
+    }
+
+    .nav details:not([open]) > summary .toggle::before {
+      content: "+";
     }
 
     .nav .subitem {
@@ -129,6 +170,22 @@
       padding-left: 8px;
       color: var(--text-tertiary);
       font-size: 12px;
+    }
+
+    .nav details.nested {
+      margin-left: 28px;
+    }
+
+    .nav details.nested summary {
+      min-height: 32px;
+      padding-left: 8px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+    }
+
+    .nav details.nested .subitem {
+      margin-left: 24px;
+      font-size: 11px;
     }
 
     .settings {
@@ -469,6 +526,131 @@
       animation: chipSlideDown .22s cubic-bezier(.4,0,.2,1) both;
     }
 
+    .planning-page {
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .calendar-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--bg-card);
+      box-shadow: var(--shadow-card);
+    }
+
+    .calendar-day {
+      min-height: 260px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-right: 1px solid var(--border-subtle);
+      background: #fff;
+    }
+
+    .calendar-day:nth-child(7n) {
+      border-right: 0;
+    }
+
+    .calendar-head {
+      min-height: 56px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #FBFAF8;
+    }
+
+    .calendar-head strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .calendar-date {
+      color: var(--text-secondary);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+    }
+
+    .calendar-body {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .event {
+      display: grid;
+      gap: 4px;
+      padding: 9px;
+      border-radius: 8px;
+      border: 1px solid var(--planning-tint);
+      background: #FAF8FD;
+      color: var(--text-primary);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .event strong {
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .event .time {
+      color: var(--planning);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .event.travel {
+      border-color: var(--entertainment-tint);
+      background: #F7F9FC;
+    }
+
+    .event.family {
+      border-color: var(--family-tint);
+      background: #FFFAF4;
+    }
+
+    .event.canceled {
+      opacity: .55;
+      text-decoration: line-through;
+    }
+
+    .keep-preview {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 16px;
+    }
+
+    .note-block {
+      min-height: 360px;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: #FBFAF8;
+      color: var(--text-secondary);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
     .routine-page {
       margin-top: 56px;
       padding-top: 40px;
@@ -629,8 +811,12 @@
       .sidebar { padding-inline: 10px; }
       .brand span,
       .nav button span:last-child,
+      .nav summary span:nth-child(2),
       .settings span:last-child { display: none; }
-      .nav button { grid-template-columns: 1fr; justify-items: center; }
+      .nav button,
+      .nav summary { grid-template-columns: 1fr; justify-items: center; }
+      .nav details.nested { margin-left: 0; }
+      .nav details .toggle { display: none; }
       main { padding: 24px; }
       .hero-row,
       .card.hero,
@@ -651,12 +837,17 @@
       .grid-3,
       .morning-card,
       .sleep-banner,
-      .music-grid { grid-template-columns: 1fr; }
+      .music-grid,
+      .keep-preview { grid-template-columns: 1fr; }
+      .calendar-grid { grid-template-columns: 1fr; }
+      .calendar-day { min-height: auto; border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+      .calendar-day:nth-child(7n) { border-bottom: 0; }
       .card { padding: 16px; }
       .card.hero { min-height: auto; }
       .timer { font-size: 36px; }
       .status-row { grid-template-columns: 1fr 1fr; }
       .routine-page { display: none; }
+      .planning-page { display: none; }
       .phone-preview { display: block; }
       .desktop-only { display: none; }
       body { background: #EEE9E2; }
@@ -682,14 +873,35 @@
         <button><span>🗓</span><span>Planning</span></button>
         <button><span>💹</span><span>Markets</span></button>
         <button><span>💼</span><span>Work</span></button>
-        <button><span>💚</span><span>Health</span></button>
-        <button class="subitem"><span>↳</span><span>Exercise</span></button>
-        <button class="subitem"><span>↳</span><span>Diet</span></button>
-        <button><span>🕋</span><span>Spiritual</span></button>
+        <details open>
+          <summary><span>💚</span><span>Health</span><span class="toggle" aria-hidden="true"></span></summary>
+          <button class="subitem"><span>↳</span><span>Exercise</span></button>
+          <button class="subitem"><span>↳</span><span>Diet</span></button>
+        </details>
+        <details open>
+          <summary><span>🕋</span><span>Spiritual</span><span class="toggle" aria-hidden="true"></span></summary>
+          <button class="subitem"><span>↳</span><span>Growth</span></button>
+        </details>
         <button><span>👪</span><span>Family</span></button>
-        <button><span>🎲</span><span>Fun</span></button>
-        <button class="subitem"><span>↳</span><span>Hobby</span></button>
-        <button class="subitem"><span>↳</span><span>Entertainment</span></button>
+        <details open>
+          <summary><span>🎲</span><span>Fun</span><span class="toggle" aria-hidden="true"></span></summary>
+          <details class="nested" open>
+            <summary><span>↳</span><span>Hobby</span><span class="toggle" aria-hidden="true"></span></summary>
+            <button class="subitem"><span></span><span>Projects</span></button>
+          </details>
+          <details class="nested" open>
+            <summary><span>↳</span><span>Music</span><span class="toggle" aria-hidden="true"></span></summary>
+            <button class="subitem"><span></span><span>Playlists</span></button>
+          </details>
+          <details class="nested" open>
+            <summary><span>↳</span><span>Entertainment</span><span class="toggle" aria-hidden="true"></span></summary>
+            <button class="subitem"><span></span><span>Podcasts</span></button>
+          </details>
+          <details class="nested" open>
+            <summary><span>↳</span><span>YouTube Shorts</span><span class="toggle" aria-hidden="true"></span></summary>
+            <button class="subitem"><span></span><span>Time Box</span></button>
+          </details>
+        </details>
       </nav>
       <nav class="nav settings">
         <button><span>⚙</span><span>Settings</span></button>
@@ -799,9 +1011,9 @@
             <p class="muted">focus items · 2 calendar holds · weekly plan needs review</p>
           </article>
           <article class="card pillar-card spiritual">
-            <div class="card-title"><h3>🕋 Spiritual</h3></div>
+            <div class="card-title"><h3>🕋 Spiritual</h3><span class="badge" style="background:var(--spiritual-tint); color:var(--spiritual)">Growth</span></div>
             <p class="big-number">7</p>
-            <p class="muted">day streak · Arabic review due · 12 ayahs in queue</p>
+            <p class="muted">day streak · growth reflection · Arabic review · 12 ayahs</p>
           </article>
           <article class="card pillar-card work">
             <div class="card-title"><h3>💼 Work</h3><span class="badge" style="background:var(--work-tint); color:var(--work)">4 urgent</span></div>
@@ -814,9 +1026,9 @@
             <p class="muted">activity ideas ready · side hustle milestone at risk Friday</p>
           </article>
           <article class="card pillar-card fun">
-            <div class="card-title"><h3>🎲 Fun</h3><span class="badge" style="background:var(--fun-tint); color:var(--fun)">Hobby + queue</span></div>
+            <div class="card-title"><h3>🎲 Fun</h3><span class="badge" style="background:var(--fun-tint); color:var(--fun)">4 areas</span></div>
             <p class="big-number">30m</p>
-            <p class="muted">hobby sketch next · 2 podcasts · 1 YouTube deep dive</p>
+            <p class="muted">hobby sketch · music queue · podcast · Shorts time box</p>
           </article>
         </div>
 
@@ -828,6 +1040,158 @@
           <span class="urgent">💹 NVDA alert</span>
           <span class="urgent">💼 TDx ticket by 3 PM</span>
           <span class="urgent">👪 Activity approval due</span>
+        </div>
+      </section>
+
+      <section class="planning-page" aria-label="Planning calendar">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Planning · Google Keep event note</p>
+            <h1>Calendar Week</h1>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" title="Previous week">‹</button>
+            <button class="pill-btn">Aug 30 - Sep 5</button>
+            <button class="icon-btn" title="Next week">›</button>
+          </div>
+        </div>
+
+        <div class="calendar-shell">
+          <div class="calendar-toolbar">
+            <div class="chips">
+              <span class="chip">Week starts Sunday</span>
+              <span class="chip">Source: Google Keep</span>
+              <span class="chip">5 parsed events</span>
+            </div>
+            <button class="secondary-action">Open Keep Note</button>
+          </div>
+
+          <div class="calendar-grid" role="grid" aria-label="Week of August 30, 2026">
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Sunday</strong><span class="calendar-date">Aug 30</span></div>
+              <div class="calendar-body">
+                <div class="event">
+                  <span class="time">1:00 PM</span>
+                  <strong>Crescent AGM</strong>
+                  <span class="muted">Sterling Community Center</span>
+                  <span class="muted">120 Enterprise St, Sterling, VA</span>
+                </div>
+              </div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Monday</strong><span class="calendar-date">Aug 31</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Tuesday</strong><span class="calendar-date">Sep 1</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Wednesday</strong><span class="calendar-date">Sep 2</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Thursday</strong><span class="calendar-date">Sep 3</span></div>
+              <div class="calendar-body">
+                <div class="event travel">
+                  <span class="time">7:27 PM - 10:01 PM</span>
+                  <strong>Flight 4559 to TX</strong>
+                  <span class="muted">Arrival 10:01 PM</span>
+                </div>
+                <div class="event canceled">
+                  <span class="time">9:00 PM</span>
+                  <strong>PT</strong>
+                  <span class="muted">Canceled</span>
+                </div>
+              </div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Friday</strong><span class="calendar-date">Sep 4</span></div>
+              <div class="calendar-body">
+                <div class="event family">
+                  <span class="time">7:30 PM</span>
+                  <strong>Rais's Wedding - TX</strong>
+                  <span class="muted">Hyatt Regency Houston West</span>
+                  <span class="muted">13210 Katy Fwy, Houston, TX 77079</span>
+                </div>
+              </div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Saturday</strong><span class="calendar-date">Sep 5</span></div>
+              <div class="calendar-body"></div>
+            </article>
+          </div>
+
+          <div class="calendar-grid" role="grid" aria-label="Week of September 6, 2026">
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Sunday</strong><span class="calendar-date">Sep 6</span></div>
+              <div class="calendar-body">
+                <div class="event family">
+                  <span class="time">All day</span>
+                  <strong>Rais's Walima - TX</strong>
+                  <span class="muted">Renaissance Dallas Hotel</span>
+                  <span class="muted">2222 N Stemmons Fwy, Dallas, TX 75207</span>
+                </div>
+              </div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Monday</strong><span class="calendar-date">Sep 7</span></div>
+              <div class="calendar-body">
+                <div class="event travel">
+                  <span class="time">2:27 PM - 6:42 PM</span>
+                  <strong>Flight 3208 to VA</strong>
+                  <span class="muted">DFW · Arrival 6:42 PM</span>
+                </div>
+              </div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Tuesday</strong><span class="calendar-date">Sep 8</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Wednesday</strong><span class="calendar-date">Sep 9</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Thursday</strong><span class="calendar-date">Sep 10</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Friday</strong><span class="calendar-date">Sep 11</span></div>
+              <div class="calendar-body"></div>
+            </article>
+            <article class="calendar-day" role="gridcell">
+              <div class="calendar-head"><strong>Saturday</strong><span class="calendar-date">Sep 12</span></div>
+              <div class="calendar-body"></div>
+            </article>
+          </div>
+
+          <article class="card keep-preview">
+            <div>
+              <div class="card-title"><h2>Keep Note Source</h2><span class="badge" style="background:var(--planning-tint); color:var(--planning)">Parsed</span></div>
+              <pre class="note-block">August 30, 2026 Sunday -
+  13:00 Crescent AGM Sterling Community Center
+       120 Enterprise St, Sterling, VA
+
+September 3, 2026 // Thursday // Flight to TX
+  7:27 PM FLIGHT 4559 / Arrival 10:01 PM
+  9:00 PT / CANCEL
+
+September 4, 2026 // Friday // Rais's Wedding - TX
+  7:30 Rais's Wedding - TX
+  Hyatt Regency Houston West
+  13210 Katy Fwy, Houston, TX 77079</pre>
+            </div>
+            <div>
+              <div class="card-title"><h2>Parser Rules</h2></div>
+              <div class="stack">
+                <div class="genre"><strong>Date heading</strong><p class="muted">Month day, year plus optional weekday and title, split by dashes or slashes.</p></div>
+                <div class="genre"><strong>Event line</strong><p class="muted">First time-like token becomes the start time; arrivals can become end times.</p></div>
+                <div class="genre"><strong>Details</strong><p class="muted">Indented lines after an event attach as venue, address, or notes until the next event/date.</p></div>
+                <div class="genre"><strong>Status</strong><p class="muted">CANCEL marks the item canceled and keeps it visible but de-emphasized.</p></div>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
